@@ -24,35 +24,35 @@ void calculate();
 void start_ncurses();
 
 int main() {
-    
+
     start_ncurses();
-    
+
     store_array();
-    
+
     int exit_game = 0;
-    
+
     while (!exit_game) {
-        
+
         current_word = 0;
         correct_words = 0;
         total_words = 0;
         correct_characters = 0;
         total_characters = 0;
         clear();
-        
+
         freopen("/dev/tty", "r", stdin);
         take_type();
         noecho();
         nodelay(stdscr, TRUE);
         timeout(100);
-        
+
         create_word_array();
-        
+
         time_t start = time(NULL);
         int position = 0;
         char typed_word[15] = {0};
         int ch;
-        
+
         while (time(NULL) - start < Gametime) {
             clear();
             print_words(typed_word);
@@ -61,9 +61,9 @@ int main() {
             attroff(COLOR_PAIR(3));
             mvprintw(10, 6, "%s ",typed_word);
             refresh();
-            
+
             ch = getch();
-            
+
             if(ch==KEY_UP||ch==KEY_DOWN||ch==KEY_LEFT||ch==KEY_RIGHT||(ch >= KEY_F(1)&&ch<= KEY_F(12))){
                 continue;
             }
@@ -92,7 +92,7 @@ int main() {
         if (exit_game)
             break;
         clear();
-        
+
         calculate();
         attron(COLOR_PAIR(2));
         mvprintw(15, 0, "\n\n--------------Press ESC to exit or press r to play again.--------------");
@@ -120,19 +120,19 @@ int main() {
 
 void take_type() {
     clear();
-    attron(COLOR_PAIR(3)); 
+    attron(COLOR_PAIR(3));
     printw("_______________________________________Welcome______________________________________\n\n");
     attroff(COLOR_PAIR(3));
     printw("You have 60 secs to play. In Easy mode, you will get word of characters ranging from 1 to 4,\nIn Medium mode, you will get words with characters ranging from 5 to 7,\nIn Hard Mode, you will get words where each are more than 7 characters long. A buffer will show the next 5 words.\nBest of luck! Enjoy!");
     printw("\nSelect\n");
     attron(COLOR_PAIR(1));
-    printw("1 for Easy Mode\n"); 
+    printw("1 for Easy Mode\n");
     attroff(COLOR_PAIR(1));
     attron(COLOR_PAIR(5));
-    printw("2 for Medium Mode\n"); 
+    printw("2 for Medium Mode\n");
     attroff(COLOR_PAIR(5));
     attron(COLOR_PAIR(6));
-    printw("3 for Hard Mode\n"); 
+    printw("3 for Hard Mode\n");
     attroff(COLOR_PAIR(6));
     attron(COLOR_PAIR(3));
     printw("\n\nPlease Select: ");
@@ -149,24 +149,24 @@ void take_type() {
         attron(COLOR_PAIR(2));
         printw("Invalid input. Please pick - \n");
         attroff(COLOR_PAIR(2));
-    
+
         attron(COLOR_PAIR(1));
         printw("1 for Easy Mode \n");
         attroff(COLOR_PAIR(1));
-        
+
         attron(COLOR_PAIR(5));
         printw("2 for Medium Mode \n");
         attroff(COLOR_PAIR(5));
-        
+
         attron(COLOR_PAIR(6));
         printw("3 for Hard Mode \n");
         attroff(COLOR_PAIR(6));
         attron(COLOR_PAIR(4));
         printw("\n\nPlease Select: ");
         attroff(COLOR_PAIR(4));
-    
+
         refresh();
-    
+
         scanw("%d", &Gametype);
     }
     printw("%d\n", Gametype);
@@ -229,10 +229,10 @@ void check(char *a) {
 
 
 void print_words(char *typed_word) {
-    
+
     if (Gametype == 1) {
         attron(COLOR_PAIR(1));
-        mvprintw(0,0, "Easy Mode"); 
+        mvprintw(0,0, "Easy Mode");
         attroff(COLOR_PAIR(1));
     } else if (Gametype == 2) {
         attron(COLOR_PAIR(5));
@@ -240,26 +240,26 @@ void print_words(char *typed_word) {
         attroff(COLOR_PAIR(5));
     } else {
         attron(COLOR_PAIR(6));
-        mvprintw(0,0, "Hard Mode"); 
+        mvprintw(0,0, "Hard Mode");
         attroff(COLOR_PAIR(6));
     }
-    int j = 0; 
-    int row = 2; 
-    int max_width = COLS - 1; 
+    int j = 0;
+    int row = 2;
+    int max_width = COLS - 1;
 
     for (int n = 0; n < 5 && current_word + n < word_number; n++) {
         char *word = Word_Array[current_word + n];
         int word_len = strlen(word);
 
         if (j + word_len > max_width) {
-            row += 2; 
-            j = 0; 
+            row += 2;
+            j = 0;
         }
 
         for (int i = 0; i < word_len; i++) {
-            if (n == 0 && i < strlen(typed_word)) { 
+            if (n == 0 && i < strlen(typed_word)) {
                 if (typed_word[i] == word[i]) {
-                    attron(COLOR_PAIR(1)); 
+                    attron(COLOR_PAIR(1));
                 } else {
                     attron(COLOR_PAIR(2));
                 }
@@ -286,15 +286,15 @@ void calculate() {
     }
     float wpm = (correct_words / (Gametime / 60.0));
     float cps = (correct_characters / Gametime);
-    
+
     clear();
-    
+
     attron(COLOR_PAIR(4));
     mvprintw(1, 5,  "------------------------------------");
     mvprintw(2, 5,  "|           RESULTS                 |");
     mvprintw(3, 5,  "------------------------------------");
     attroff(COLOR_PAIR(4));
-    
+
     if (accuracy < 70) {
         attron(COLOR_PAIR(2));
         mvprintw(5, 7,  "Accuracy: %.3f%%", accuracy);
@@ -305,15 +305,15 @@ void calculate() {
         attroff(COLOR_PAIR(5));
     } else {
         attron(COLOR_PAIR(1));
-        mvprintw(5, 7,  "Accuracy: %.3f%%", accuracy); 
+        mvprintw(5, 7,  "Accuracy: %.3f%%", accuracy);
         attroff(COLOR_PAIR(1));
     }
-    
+
     if (wpm < 30) {
         attron(COLOR_PAIR(2));
         mvprintw(6, 7,  "Words Per Minute: %.3f", wpm);
         attroff(COLOR_PAIR(2));
-    } else if (wpm >= 30 && wpm < 50) { 
+    } else if (wpm >= 30 && wpm < 50) {
         attron(COLOR_PAIR(5));
         mvprintw(6, 7,  "Words Per Minute: %.3f", wpm);
         attroff(COLOR_PAIR(5));
@@ -322,7 +322,7 @@ void calculate() {
         mvprintw(6, 7,  "Words Per Minute: %.3f", wpm);
         attroff(COLOR_PAIR(1));
     }
-    
+
     attron(COLOR_PAIR(6));
     mvprintw(7, 7,  "CPS: %.3f", cps);
     attroff(COLOR_PAIR(6));
@@ -332,10 +332,10 @@ void calculate() {
     mvprintw(10, 5, "|       OTHER STATISTICS           |");
     mvprintw(11, 5, "------------------------------------");
     attroff(COLOR_PAIR(5));
-    
+
     mvprintw(13, 7, "Total Keystrokes: %d | Incorrect: %d | Correct: %d", total_characters, total_characters - correct_characters, correct_characters);
     mvprintw(14, 7, "Total Words: %d | Incorrect: %d | Correct: %d", total_words, total_words - correct_words, correct_words);
-    
+
     refresh();
 }
 
