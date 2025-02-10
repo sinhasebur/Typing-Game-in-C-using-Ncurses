@@ -11,7 +11,7 @@
 
 char Main_Array[600][15];
 char Word_Array[word_number][15];
-int Gametime = 10;
+int Gametime = 60;
 int Gametype, size_upper, size_lower, current_word = 0;
 int correct_words = 0, total_words = 0, correct_characters = 0, total_characters = 0;
 
