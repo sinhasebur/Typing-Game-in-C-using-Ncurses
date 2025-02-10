@@ -1,0 +1,11 @@
+For ncurses commands
+https://github.com/thenamankumar/ncurses-cheatsheet/blob/master/cheatsheet.md
+
+Shuffling Algorithm for array randomization
+https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
+
+Word Pool
+https://randomwordgenerator.com/
+
+For Color
+https://www.linuxjournal.com/content/about-ncurses-colors-0
